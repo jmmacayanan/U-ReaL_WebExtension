@@ -1,0 +1,160 @@
+/* Gmail URL Scanner - Content Script Styles */
+
+.url-scanner-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 10000;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+.modal-content {
+  background: white;
+  padding: 30px;
+  border-radius: 12px;
+  max-width: 500px;
+  width: 90%;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+  text-align: center;
+}
+
+.modal-content h3 {
+  color: #dc2626;
+  margin: 0 0 20px 0;
+  font-size: 20px;
+}
+
+.modal-content p {
+  margin: 15px 0;
+  color: #374151;
+  line-height: 1.5;
+}
+
+.url-text {
+  background: #fef2f2;
+  border: 1px solid #fca5a5;
+  padding: 10px;
+  border-radius: 6px;
+  word-break: break-all;
+  font-family: monospace;
+  font-size: 14px;
+  color: #dc2626;
+}
+
+.modal-buttons {
+  margin-top: 25px;
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+}
+
+.modal-buttons button {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  transition: background-color 0.2s;
+}
+
+.close-btn {
+  background: #6b7280;
+  color: white;
+}
+
+.close-btn:hover {
+  background: #4b5563;
+}
+
+.extension-btn {
+  background: #3b82f6;
+  color: white;
+}
+
+.extension-btn:hover {
+  background: #2563eb;
+}
+
+/* Malicious link styling */
+.malicious-link {
+  position: relative;
+  text-decoration: line-through !important;
+  color: #dc2626 !important;
+  background-color: #fef2f2 !important;
+  padding: 2px 4px !important;
+  border-radius: 4px !important;
+  border: 1px solid #fca5a5 !important;
+  pointer-events: none !important;
+  cursor: help !important;
+}
+
+.malicious-link::after {
+  content: " ⚠️";
+  color: #dc2626;
+}
+
+/* Loading indicator for URL checking */
+.url-checking {
+  position: relative;
+}
+
+.url-checking::after {
+  content: " 🔍";
+  animation: pulse 1s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 0.4; }
+  50% { opacity: 1; }
+}
+
+/* Gmail-specific overrides */
+.gmail-url-scanner-disabled {
+  pointer-events: none !important;
+  cursor: help !important;
+}
+
+.gmail-url-scanner-warning {
+  display: inline-block;
+  margin-left: 4px;
+  color: #dc2626;
+  font-size: 16px;
+}
+
+/* Notification toast */
+.url-scanner-toast {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  background: #dc2626;
+  color: white;
+  padding: 15px 20px;
+  border-radius: 8px;
+  z-index: 9999;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  max-width: 350px;
+  animation: slideIn 0.3s ease-out;
+}
+
+.url-scanner-toast.success {
+  background: #10b981;
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}

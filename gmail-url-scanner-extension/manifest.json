@@ -1,0 +1,34 @@
+{
+  "manifest_version": 3,
+  "name": "Gmail URL Security Scanner",
+  "version": "1.0",
+  "description": "Scans URLs in Gmail for potential security threats",
+  "permissions": [
+    "activeTab",
+    "storage"
+  ],
+  "host_permissions": [
+    "https://mail.google.com/*"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": ["https://mail.google.com/*"],
+      "js": ["content.js"],
+      "css": ["styles.css"],
+      "run_at": "document_idle"
+    }
+  ],
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "Gmail URL Scanner"
+  },
+  "web_accessible_resources": [
+    {
+      "resources": ["warning-icon.svg"],
+      "matches": ["https://mail.google.com/*"]
+    }
+  ]
+}

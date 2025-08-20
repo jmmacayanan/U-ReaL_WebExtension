@@ -15,7 +15,7 @@ A Chrome extension that automatically scans URLs in Gmail emails for potential s
 
 - Python 3.8+
 - Chrome Browser
-- Your trained XGBoost model (`url_xgb_model.json`)
+- Your trained XGBoost model (`url_xgb_model_v2.json`)
 - Whitelist CSV file (`raw_datasets/benign-urls.csv`)
 
 ## 🛠️ Setup Instructions
@@ -98,7 +98,6 @@ The backend provides these endpoints:
 - `GET /health` - Health check and status
 - `POST /check-url` - Check single URL
 - `POST /check-urls` - Check multiple URLs (batch)
-- `GET /stats` - Server statistics
 
 ### Example API Usage
 

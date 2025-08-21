@@ -50,7 +50,7 @@ FEATURE_ORDER = [
     'largest_path',
     'sec_sen_word_cnt',
     'IPaddress_presence',
-    'exe_in_url',
+    'exe_in_url'
 ]
 
 # -----------------------------

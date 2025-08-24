@@ -43,7 +43,10 @@ test_urls = [
     "https://dibati.com",
     "https://ln.run/JrHuK",
     "http://192.227.138.203/",
-    "https://fixnewupdate.com/down/app/index.php?view=index&amp;id=51caa06880986ef8a58eb492b891de47"
+    "https://fixnewupdate.com/down/app/index.php?view=index&amp;id=51caa06880986ef8a58eb492b891de47",
+    "https://hau.edu.ph/services/angelite-hub",
+    "https://ukrfunds.com.ua/",
+    "dibati.com"
 ]
 
 # -----------------------------
@@ -91,5 +94,5 @@ for url in test_urls:
         continue
 
     proba = model.predict_proba(df)[0][1]
-    label = "🔴 Malicious" if proba >= 0.3 else "🟢 Benign"
+    label = "🔴 Malicious" if proba >= 0.4 else "🟢 Benign"
     print(f"{url} → {label} ({proba * 100:.2f}% confidence)")

@@ -43,7 +43,7 @@ if __name__ == '__main__':
     scale_pos_weight = num_neg / num_pos
     print(f"scale_pos_weight = {scale_pos_weight:.2f} (neg={num_neg}, pos={num_pos})")
 
-    # -------- 80/20 Train-Test Split --------
+    # -------- Train-Test Split --------
     X_train, X_test, y_train, y_test = train_test_split(
         features_df, labels, test_size=0.2, random_state=42, stratify=labels
     )
@@ -52,41 +52,50 @@ if __name__ == '__main__':
     dtrain = xgb.DMatrix(X_train, label=y_train)
     dtest = xgb.DMatrix(X_test, label=y_test)
 
-    # -------- Training parameters --------
+        # -------- Training parameters --------
     params = {
-        "objective": "binary:logistic",
-        "max_depth": 5,
-        "learning_rate": 0.01,
-        "subsample": 0.9,
-        "colsample_bytree": 0.7,
-        "gamma": 2,
-        "min_child_weight": 2,
-        "reg_lambda": 4,
-        "eval_metric": "logloss",
-        "tree_method": "hist",
-        "scale_pos_weight": scale_pos_weight
+        "objective": "binary:logistic",  # binary classification
+        "eval_metric": "rmse",           # training logs in RMSE format
+        "max_depth":6,                  # tree depth
+        "learning_rate": 0.05,            # faster learning than 0.01
+        "scale_pos_weight": scale_pos_weight  # handle imbalance
     }
 
+
     print("🚀 Training model...")
-    evals = [(dtrain, "train")]
+    evals = [(dtrain, "train"), (dtest, "validation")]
+    evals_result = {}
 
     bst = xgb.train(
         params=params,
         dtrain=dtrain,
-        num_boost_round=100,
+        num_boost_round=150,  # 👈 increase to see long logs
         evals=evals,
-        verbose_eval=True,
-        early_stopping_rounds=50
+        evals_result=evals_result,
+        verbose_eval=50,      # 👈 print every 500 rounds
+        early_stopping_rounds=20
     )
 
-    # -------- Evaluate --------
-    y_pred_prob = bst.predict(dtest)
-    y_pred = (y_pred_prob > 0.5).astype(int)
 
-    print("\n✅ Accuracy:", accuracy_score(y_test, y_pred))
-    print(classification_report(y_test, y_pred, digits=4))
-    print("ROC-AUC:", roc_auc_score(y_test, y_pred_prob))
-    print("Confusion Matrix:\n", confusion_matrix(y_test, y_pred))
+    # -------- Evaluate on training set --------
+    y_train_pred_prob = bst.predict(dtrain)
+    y_train_pred = (y_train_pred_prob > 0.5).astype(int)
+
+    print("\n📊 Training Performance")
+    print("✅ Accuracy:", accuracy_score(y_train, y_train_pred))
+    print(classification_report(y_train, y_train_pred, digits=4))
+    print("ROC-AUC:", roc_auc_score(y_train, y_train_pred_prob))
+    print("Confusion Matrix:\n", confusion_matrix(y_train, y_train_pred))
+
+    # -------- Evaluate on validation/test set --------
+    y_test_pred_prob = bst.predict(dtest)
+    y_test_pred = (y_test_pred_prob > 0.5).astype(int)
+
+    print("\n📊 Validation Performance")
+    print("✅ Accuracy:", accuracy_score(y_test, y_test_pred))
+    print(classification_report(y_test, y_test_pred, digits=4))
+    print("ROC-AUC:", roc_auc_score(y_test, y_test_pred_prob))
+    print("Confusion Matrix:\n", confusion_matrix(y_test, y_test_pred))
 
     # -------- Save model --------
     bst.save_model("url_xgb_model_v2.json")

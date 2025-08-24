@@ -4,7 +4,7 @@ from urllib.parse import urlparse, urlunparse
 
 class URLFeatureExtractor:
     WHITELIST = set()
-    MAX_WHITELIST = 30000
+    MAX_WHITELIST = 50000
     SUSPICIOUS_KEYWORDS = ['login', 'secure', 'account', 'bank', 'confirm', 'signin', 'money', 'free']
 
     @staticmethod
@@ -12,8 +12,6 @@ class URLFeatureExtractor:
         parsed = urlparse(domain_or_url)
         netloc = parsed.netloc if parsed.netloc else parsed.path
         netloc = netloc.lower().split(':')[0]
-        if netloc.startswith('www.'):
-            netloc = netloc[4:]
         return netloc
 
     @staticmethod
@@ -21,13 +19,10 @@ class URLFeatureExtractor:
         parsed = urlparse(url)
         scheme = parsed.scheme.lower()
         netloc = parsed.netloc.lower()
-        if netloc.startswith('www.'):
-            netloc = netloc[4:]
         path = parsed.path or "/"   # normalize empty path
         if path == "/":             # canonicalize root slash
             path = ""               
         return urlunparse((scheme, netloc, path, parsed.params, parsed.query, parsed.fragment))
-
 
     @staticmethod
     def load_whitelist(csv_path):
@@ -46,15 +41,20 @@ class URLFeatureExtractor:
         URLFeatureExtractor.WHITELIST = whitelist
 
     def is_whitelisted(self):
-        # Exact domain match
-        if self.domain in URLFeatureExtractor.WHITELIST:
+        domain = self.domain
+
+        # Exact match
+        if domain in URLFeatureExtractor.WHITELIST:
             return True
 
-        # Subdomain match: check if whitelist entry is a suffix of the domain
-        for w in URLFeatureExtractor.WHITELIST:
-            if self.domain == w or self.domain.endswith("." + w):
+        # Allow only the "www." variant of a whitelisted domain
+        if domain.startswith("www."):
+            base = domain[4:]
+            if base in URLFeatureExtractor.WHITELIST:
                 return True
+
         return False
+
 
 
     def __init__(self, url):

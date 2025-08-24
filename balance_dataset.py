@@ -7,7 +7,7 @@ df_phish["label"] = 1  # malicious
 
 # Load Tranco domains and convert to URLs
 df_tranco = pd.read_csv("raw_datasets/benign-urls.csv", header=None, names=["rank", "domain"])
-df_tranco["url"] = "http://" + df_tranco["domain"]
+df_tranco["url"] = "https://" + df_tranco["domain"]
 df_tranco = df_tranco[["url"]].drop_duplicates()
 df_tranco["label"] = 0  # benign
 

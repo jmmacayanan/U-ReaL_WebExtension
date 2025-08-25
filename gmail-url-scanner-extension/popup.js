@@ -1,7 +1,6 @@
 // Extension Popup Logic
 document.addEventListener('DOMContentLoaded', function() {
   loadMaliciousURLs();
-  setupSettings();
   updateStats();
 });
 
@@ -34,9 +33,7 @@ function displayMaliciousURLs(urls) {
         <span>⚠️ ${(item.confidence * 100).toFixed(1)}% confidence</span>
         <span>${formatTime(item.timestamp)}</span>
       </div>
-      <button class="visit-btn" onclick="visitURL('${item.url}')">
-        Visit Anyway
-      </button>
+      <!-- Removed Visit Anyway button -->
     </div>
   `).join('');
 }
@@ -59,50 +56,6 @@ function updateStatsDisplay(urls) {
   // In a real implementation, you'd track this separately
   const estimatedTotal = Math.max(urls.length * 10, 0);
   document.getElementById('totalScanned').textContent = estimatedTotal;
-}
-
-function setupSettings() {
-  const settingsBtn = document.getElementById('settingsBtn');
-  const settingsPanel = document.getElementById('settingsPanel');
-  const thresholdSlider = document.getElementById('threshold');
-  const thresholdValue = document.getElementById('thresholdValue');
-  const notificationsCheckbox = document.getElementById('notifications');
-
-  // Toggle settings panel
-  settingsBtn.addEventListener('click', () => {
-    settingsPanel.style.display = 
-      settingsPanel.style.display === 'none' ? 'block' : 'none';
-  });
-
-  // Load current settings
-  chrome.storage.local.get(['settings'], function(data) {
-    const settings = data.settings || { threshold: 0.4, enableNotifications: true };
-    thresholdSlider.value = settings.threshold;
-    thresholdValue.textContent = Math.round(settings.threshold * 100) + '%';
-    notificationsCheckbox.checked = settings.enableNotifications;
-  });
-
-  // Update threshold display
-  thresholdSlider.addEventListener('input', function() {
-    const value = Math.round(this.value * 100);
-    thresholdValue.textContent = value + '%';
-  });
-
-  // Save settings on change
-  thresholdSlider.addEventListener('change', saveSettings);
-  notificationsCheckbox.addEventListener('change', saveSettings);
-}
-
-function saveSettings() {
-  const threshold = parseFloat(document.getElementById('threshold').value);
-  const enableNotifications = document.getElementById('notifications').checked;
-
-  chrome.storage.local.set({
-    settings: {
-      threshold: threshold,
-      enableNotifications: enableNotifications
-    }
-  });
 }
 
 function visitURL(url) {

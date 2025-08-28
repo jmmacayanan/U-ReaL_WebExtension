@@ -1,4 +1,4 @@
-/* Gmail URL Scanner - Content Script Styles */
+/*U-ReaL Scanner - Content Script Styles */
 
 .url-scanner-modal {
   position: fixed;
@@ -96,8 +96,40 @@
 }
 
 .malicious-link::after {
-  content: " ⚠️";
+  content: " ✖";
   color: #dc2626;
+}
+
+.benign-link {
+  position: relative;
+  cursor: pointer;
+}
+
+.benign-link:hover::before {
+  content: "This link is deemed safe.";
+  position: absolute;
+  top: 50%;
+  left: 105%;
+  transform: translateY(-50%);
+  background: #10b981;
+  color: #fff;
+  padding: 6px 12px;
+  border-radius: 6px;
+  white-space: nowrap;
+  font-size: 13px;
+  z-index: 9999;
+  opacity: 1;
+  pointer-events: none;
+}
+
+.benign-link:hover::after {
+  z-index: 10000;
+}
+
+.benign-link:hover::after {
+  content: " ✓";
+  color: #10b981;
+  position: relative;
 }
 
 /* Loading indicator for URL checking */
@@ -115,13 +147,13 @@
   50% { opacity: 1; }
 }
 
-/* Gmail-specific overrides */
-.gmail-url-scanner-disabled {
+/* U-ReaL-specific overrides */
+.ureal-url-scanner-disabled {
   pointer-events: none !important;
   cursor: help !important;
 }
 
-.gmail-url-scanner-warning {
+.ureal-url-scanner-warning {
   display: inline-block;
   margin-left: 4px;
   color: #dc2626;

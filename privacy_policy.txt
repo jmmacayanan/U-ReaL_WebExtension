@@ -1,0 +1,31 @@
+Privacy Policy for U-ReaL
+
+U-ReaL is a Chrome extension designed to detect suspicious or potentially harmful links inside emails in Gmail. Protecting your privacy is very important to us. This Privacy Policy explains what information the Extension collects, how it is used, and your rights.
+
+1. Information We Collect
+
+URLs/Links for Analysis: The Extension may process the URLs contained in emails to determine whether they are suspicious.
+
+No Personal Data Storage: The Extension does not collect, store, or share your personal information (such as name, email address, or account details), as well as the content of an analyzed email.
+
+2. How Information Is Used
+
+The Extension only analyzes the links inside an email by sending it to the backend that is hosted in AWS server. No links will be save on any database.
+
+3. Data Sharing
+
+We do not sell, trade, or share your data with third parties.
+
+
+4. Data Storage & Security
+
+No personal data is stored on our servers. All analysis is performed locally on your device unless otherwise stated.
+
+We may update this Privacy Policy from time to time. Any changes will be posted at the same link where this policy is published.
+
+
+If you have questions or concerns about this Privacy Policy or the Extension, you can contact us at:
+
+jerney925@gmail.com 
+patrickcardenio@yahoo.com
+ncrblss@gmail.com

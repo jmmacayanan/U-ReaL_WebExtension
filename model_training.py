@@ -57,7 +57,7 @@ if __name__ == '__main__':
         "objective": "binary:logistic",  # binary classification
         "eval_metric": "rmse",           # training logs in RMSE format
         "max_depth":6,                  # tree depth
-        "learning_rate": 0.05,            # faster learning than 0.01
+        "learning_rate": 0.1,            # faster learning than 0.01
         "scale_pos_weight": scale_pos_weight  # handle imbalance
     }
 
@@ -69,11 +69,11 @@ if __name__ == '__main__':
     bst = xgb.train(
         params=params,
         dtrain=dtrain,
-        num_boost_round=150,  # 👈 increase to see long logs
+        num_boost_round=10000, 
         evals=evals,
         evals_result=evals_result,
-        verbose_eval=50,      # 👈 print every 500 rounds
-        early_stopping_rounds=20
+        verbose_eval=100,      
+        early_stopping_rounds=50
     )
 
 
@@ -83,7 +83,7 @@ if __name__ == '__main__':
 
     print("\n📊 Training Performance")
     print("✅ Accuracy:", accuracy_score(y_train, y_train_pred))
-    print(classification_report(y_train, y_train_pred, digits=4))
+    print(classification_report(y_train, y_train_pred, digits=2))
     print("ROC-AUC:", roc_auc_score(y_train, y_train_pred_prob))
     print("Confusion Matrix:\n", confusion_matrix(y_train, y_train_pred))
 
@@ -93,7 +93,7 @@ if __name__ == '__main__':
 
     print("\n📊 Validation Performance")
     print("✅ Accuracy:", accuracy_score(y_test, y_test_pred))
-    print(classification_report(y_test, y_test_pred, digits=4))
+    print(classification_report(y_test, y_test_pred, digits=2))
     print("ROC-AUC:", roc_auc_score(y_test, y_test_pred_prob))
     print("Confusion Matrix:\n", confusion_matrix(y_test, y_test_pred))
 

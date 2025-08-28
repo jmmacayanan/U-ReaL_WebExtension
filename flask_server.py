@@ -4,6 +4,7 @@ import pandas as pd
 import xgboost as xgb
 from feature_extractor import URLFeatureExtractor
 import logging
+import tldextract
 
 # -----------------------------
 # Setup logging
@@ -13,6 +14,11 @@ logger = logging.getLogger(__name__)
 
 app = Flask(__name__)
 CORS(app)  # Enable CORS for Chrome extension
+
+# -----------------------------
+# Add missing main_domain property
+# -----------------------------
+
 
 # -----------------------------
 # Load Trained Model
@@ -35,19 +41,19 @@ except Exception as e:
     logger.error(f"❌ Failed to load whitelist: {e}")
 
 # -----------------------------
-# Feature order must match training
+# Feature order (MUST match training!)
 # -----------------------------
 FEATURE_ORDER = [
     'URL_length',
     'Domain_length',
     'No_of_dots',
-    'avg_token_length',
+    # 'avg_token_length',
     'token_count',
     'largest_token',
-    'avg_domain_token_length',
+    # 'avg_domain_token_length',
     'domain_token_count',
     'largest_domain',
-    'avg_path_token',
+    # 'avg_path_token',
     'path_token_count',
     'largest_path',
     'sec_sen_word_cnt',
@@ -59,7 +65,7 @@ FEATURE_ORDER = [
 # -----------------------------
 # Prediction function
 # -----------------------------
-def predict_url(url, threshold=0.3):
+def predict_url(url, threshold=0.5):
     try:
         extractor = URLFeatureExtractor(url)
 
@@ -187,8 +193,6 @@ def whitelist_check():
     extractor = URLFeatureExtractor(url)
     return jsonify({
         'url': url,
-        'domain': extractor.domain,
-        'main_domain': extractor.main_domain,
         'is_whitelisted': extractor.is_whitelisted(),
         'whitelist_size': len(URLFeatureExtractor.WHITELIST)
     })

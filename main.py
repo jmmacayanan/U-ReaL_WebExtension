@@ -56,13 +56,13 @@ FEATURE_ORDER = [
     'URL_length',
     'Domain_length',
     'No_of_dots',
-    'avg_token_length',
+    # 'avg_token_length',
     'token_count',
     'largest_token',
-    'avg_domain_token_length',
+    # 'avg_domain_token_length',
     'domain_token_count',
     'largest_domain',
-    'avg_path_token',
+    # 'avg_path_token',
     'path_token_count',
     'largest_path',
     'sec_sen_word_cnt',
@@ -94,5 +94,5 @@ for url in test_urls:
         continue
 
     proba = model.predict_proba(df)[0][1]
-    label = "🔴 Malicious" if proba >= 0.4 else "🟢 Benign"
+    label = "🔴 Malicious" if proba >= 0.5 else "🟢 Benign"
     print(f"{url} → {label} ({proba * 100:.2f}% confidence)")

@@ -1,28 +1,28 @@
 import re
 import csv
 from urllib.parse import urlparse, urlunparse
+import tldextract
 
 class URLFeatureExtractor:
     WHITELIST = set()
     MAX_WHITELIST = 50000
     SUSPICIOUS_KEYWORDS = ['login', 'secure', 'account', 'bank', 'confirm', 'signin', 'money', 'free']
 
+
     @staticmethod
-    def normalize_domain(domain_or_url):
-        parsed = urlparse(domain_or_url)
-        netloc = parsed.netloc if parsed.netloc else parsed.path
-        netloc = netloc.lower().split(':')[0]
-        return netloc
+    def get_domain(url):
+        ext = tldextract.extract(url)
+        return ".".join(part for part in [ext.domain, ext.suffix] if part)
+
 
     @staticmethod
     def normalize_url(url):
         parsed = urlparse(url)
         scheme = parsed.scheme.lower()
         netloc = parsed.netloc.lower()
-        path = parsed.path or "/"   # normalize empty path
-        if path == "/":             # canonicalize root slash
-            path = ""               
+        path = parsed.path or "/"   # normalize empty path (keeps "/" if no path given)
         return urlunparse((scheme, netloc, path, parsed.params, parsed.query, parsed.fragment))
+
 
     @staticmethod
     def load_whitelist(csv_path):
@@ -36,7 +36,7 @@ class URLFeatureExtractor:
                     continue
                 url = row[1].strip()
                 if url:
-                    domain = URLFeatureExtractor.normalize_domain(url)
+                    domain = URLFeatureExtractor.get_domain(url)
                     whitelist.add(domain)
         URLFeatureExtractor.WHITELIST = whitelist
 
@@ -58,14 +58,15 @@ class URLFeatureExtractor:
 
 
     def __init__(self, url):
-        self.url = self.normalize_url(url)
-        self.parsed = urlparse(self.url)
-        self.domain = self.normalize_domain(self.url)
+        self.url = self.normalize_url(url)       # keep full URL, normalized
+        self.parsed = urlparse(self.url)         # parse full URL
+        self.domain = self.get_domain(self.url)  # extract domain only
         self.path = self.parsed.path
         self.tokens_url = re.split(r'\W+', self.url)
         self.tokens_domain = re.split(r'\W+', self.domain)
         self.tokens_path = re.split(r'\W+', self.path)
         self._url_lower = self.url.lower()
+
 
     # ===== Token Stats Helper =====
     @staticmethod
@@ -135,13 +136,13 @@ class URLFeatureExtractor:
             'URL_length': self.URL_length(),
             'Domain_length': self.Domain_length(),
             'No_of_dots': self.No_of_dots(),
-            'avg_token_length': self.avg_token_length(),
+            # 'avg_token_length': self.avg_token_length(),
             'token_count': self.token_count(),
             'largest_token': self.largest_token(),
-            'avg_domain_token_length': self.avg_domain_token_length(),
+            # 'avg_domain_token_length': self.avg_domain_token_length(),
             'domain_token_count': self.domain_token_count(),
             'largest_domain': self.largest_domain(),
-            'avg_path_token': self.avg_path_token(),
+            # 'avg_path_token': self.avg_path_token(),
             'path_token_count': self.path_token_count(),
             'largest_path': self.largest_path(),
             'sec_sen_word_cnt': self.sec_sen_word_cnt(),

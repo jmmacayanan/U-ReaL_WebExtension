@@ -202,4 +202,4 @@ if __name__ == '__main__':
     print(f"   Model Loaded: {'✅' if model else '❌'}")
     print(f"   Whitelist Size: {len(URLFeatureExtractor.WHITELIST)} domains")
     print(f"   Features: {len(FEATURE_ORDER)} ({', '.join(FEATURE_ORDER)})")
-    app.run(host='0.0.0.0', port=5000, debug=True)
+    app.run(host='127.0.0.1', port=5000, debug=False)

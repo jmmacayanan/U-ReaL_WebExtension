@@ -1,7 +1,7 @@
 // Background Service Worker for Gmail URL Scanner
 
 // Backend API configuration
-const BACKEND_URL = 'http:/localhost:5000'; 
+const BACKEND_URL = 'https://u-real.site'; 
 
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   if (request.action === 'checkURL') {

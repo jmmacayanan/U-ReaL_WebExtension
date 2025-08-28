@@ -150,10 +150,10 @@ def check_url():
         return jsonify({'error': 'Missing URL in request'}), 400
 
     url = data['url']
-    threshold = data.get('threshold', 0.5)
+    threshold = data.get('threshold', threshold)
 
     if not 0.0 <= threshold <= 1.0:
-        threshold = 0.5
+        threshold = threshold
 
     result = predict_url(url, threshold)
     return jsonify(result)
@@ -165,7 +165,7 @@ def check_multiple_urls():
         return jsonify({'error': 'Missing URLs in request'}), 400
 
     urls = data['urls']
-    threshold = data.get('threshold', 0.5)
+    threshold = data.get('threshold', threshold)
 
     if not isinstance(urls, list):
         return jsonify({'error': 'URLs must be a list'}), 400

@@ -7,6 +7,7 @@ if __name__ == '__main__':
     from tqdm import tqdm
     from feature_extractor import URLFeatureExtractor
     import numpy as np
+    import matplotlib.pyplot as plt
 
     # -------- Feature extraction helper --------
     def safe_extract_features(index_url):
@@ -23,6 +24,24 @@ if __name__ == '__main__':
     # -------- Load dataset --------
     df = pd.read_csv("url_dataset_balanced.csv")
     print("Label distribution:\n", df['label'].value_counts())
+
+
+    # -------- Function for learning curve visualization --------
+    def plot_learning_curve(evals_result):
+        train_rmse = evals_result['train']['rmse']
+        val_rmse = evals_result['validation']['rmse']
+
+        plt.figure(figsize=(8, 5))
+        plt.plot(train_rmse, label='Training RMSE')
+        plt.plot(val_rmse, label='Validation RMSE')
+        plt.xlabel('Boosting Rounds')
+        plt.ylabel('RMSE')
+        plt.title('XGBoost Training vs Validation RMSE')
+        plt.legend()
+        plt.grid(True)
+        plt.tight_layout()
+        plt.savefig("learning_curve.png")  # saves as image
+        plt.show()
 
     # -------- Extract features concurrently --------
     print("⚙️ Extracting features...")
@@ -100,3 +119,4 @@ if __name__ == '__main__':
     # -------- Save model --------
     bst.save_model("url_xgb_model_v2.json")
     print("✅ Model saved as url_xgb_model_v2.json")
+    plot_learning_curve(evals_result)

@@ -30,7 +30,7 @@ def test_single_url():
     for url in test_urls:
         try:
             response = requests.post(f'{BACKEND_URL}/check-url', 
-                                   json={'url': url, 'threshold': 0.4})
+                                   json={'url': url, 'threshold': 0.5})
             
             if response.status_code == 200:
                 result = response.json()
@@ -63,7 +63,7 @@ def test_multiple_urls():
     
     try:
         response = requests.post(f'{BACKEND_URL}/check-urls',
-                               json={'urls': urls, 'threshold': 0.4})
+                               json={'urls': urls, 'threshold': 0.5})
         
         if response.status_code == 200:
             data = response.json()

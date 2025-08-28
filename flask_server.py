@@ -4,7 +4,6 @@ import pandas as pd
 import xgboost as xgb
 from feature_extractor import URLFeatureExtractor
 import logging
-import tldextract
 
 # -----------------------------
 # Setup logging
@@ -14,10 +13,6 @@ logger = logging.getLogger(__name__)
 
 app = Flask(__name__)
 CORS(app)  # Enable CORS for Chrome extension
-
-# -----------------------------
-# Add missing main_domain property
-# -----------------------------
 
 
 # -----------------------------
@@ -150,7 +145,7 @@ def check_url():
         return jsonify({'error': 'Missing URL in request'}), 400
 
     url = data['url']
-    threshold = data.get('threshold', threshold)
+    threshold = data.get('threshold', 0.5)
 
     if not 0.0 <= threshold <= 1.0:
         threshold = threshold
@@ -165,7 +160,7 @@ def check_multiple_urls():
         return jsonify({'error': 'Missing URLs in request'}), 400
 
     urls = data['urls']
-    threshold = data.get('threshold', threshold)
+    threshold = data.get('threshold', 0.5)
 
     if not isinstance(urls, list):
         return jsonify({'error': 'URLs must be a list'}), 400

@@ -1,5 +1,5 @@
-// Gmail URL Scanner Content Script - Fixed Lifecycle Management
-class GmailURLScanner {
+// U-ReaL Scanner Content Script - Fixed Lifecycle Management
+class UReaLURLScanner {
   constructor() {
     this.scannedUrls = new Set();
     this.maliciousUrls = new Map();
@@ -24,7 +24,7 @@ class GmailURLScanner {
       return;
     }
 
-    console.log('🔧 Gmail URL Scanner initializing...');
+    console.log('🔧 U-ReaL Scanner initializing...');
     this.isDestroyed = false;
     
     // Setup lifecycle event handlers
@@ -34,11 +34,11 @@ class GmailURLScanner {
       // Load stored data
       await this.loadStoredData();
       
-      // Wait for Gmail and start scanning
-      await this.waitForGmail();
+      // Wait for U-ReaL and start scanning
+      await this.waitForUReaL();
       
       if (!this.isDestroyed) {
-        console.log('📧 Gmail loaded, starting URL scanner');
+        console.log('📧 U-ReaL loaded, starting URL scanner');
         this.startScanning();
         this.isInitialized = true;
       }
@@ -60,25 +60,25 @@ class GmailURLScanner {
     // Handle page unload
     window.addEventListener('beforeunload', this.handleBeforeUnload);
     
-    // Handle Gmail navigation (pushstate/popstate)
+    // Handle U-ReaL navigation (pushstate/popstate)
     window.addEventListener('popstate', () => {
       console.log('📍 Browser navigation detected');
       this.reinitialize();
     });
     
-    // Monitor for pushstate changes (Gmail navigation)
+    // Monitor for pushstate changes (U-ReaL navigation)
     const originalPushState = history.pushState;
     const originalReplaceState = history.replaceState;
     
     history.pushState = (...args) => {
       originalPushState.apply(history, args);
-      console.log('📍 Gmail pushState navigation detected');
+      console.log('📍 U-ReaL pushState navigation detected');
       this.handleNavigation();
     };
     
     history.replaceState = (...args) => {
       originalReplaceState.apply(history, args);
-      console.log('📍 Gmail replaceState navigation detected');
+      console.log('📍 U-ReaL replaceState navigation detected');
       this.handleNavigation();
     };
   }
@@ -107,7 +107,7 @@ class GmailURLScanner {
   // Handle window blur
   handleBlur() {
     console.log('🎯 Window blurred');
-    // Don't pause on blur as Gmail might still be processing
+    // Don't pause on blur as U-ReaL might still be processing
   }
 
   // Handle before page unload
@@ -116,11 +116,11 @@ class GmailURLScanner {
     this.cleanup();
   }
 
-  // Handle Gmail navigation
+  // Handle U-ReaL navigation
   handleNavigation() {
     setTimeout(() => {
       if (this.shouldReinitialize()) {
-        console.log('🔄 Gmail navigation completed, reinitializing...');
+        console.log('🔄 U-ReaL navigation completed, reinitializing...');
         this.reinitialize();
       }
     }, 1000);
@@ -128,17 +128,17 @@ class GmailURLScanner {
 
   // Check if we should reinitialize
   shouldReinitialize() {
-    // Check if we're still on Gmail
+    // Check if we're still on U-ReaL
     if (window.location.hostname !== 'mail.google.com') {
       return false;
     }
     
-    // Check if Gmail interface is present
-    const gmailInterface = document.querySelector('[role="main"]') || 
+    // Check if U-ReaL interface is present
+    const urealInterface = document.querySelector('[role="main"]') || 
                           document.querySelector('.nH') || 
                           document.querySelector('[jsname]');
     
-    return !!gmailInterface;
+    return !!urealInterface;
   }
 
   // Reinitialize the scanner
@@ -155,10 +155,10 @@ class GmailURLScanner {
     
     // Reinitialize
     try {
-      await this.waitForGmail();
+      await this.waitForUReaL();
       
       if (!this.isDestroyed && this.shouldReinitialize()) {
-        console.log('📧 Gmail reloaded, restarting scanner');
+        console.log('📧 U-ReaL reloaded, restarting scanner');
         this.startScanning();
         this.isInitialized = true;
       }
@@ -190,7 +190,7 @@ class GmailURLScanner {
   resumeScanning() {
     if (this.isDestroyed) return;
     
-    // Only resume if we're still on Gmail
+    // Only resume if we're still on U-ReaL
     if (!this.shouldReinitialize()) {
       this.reinitialize();
       return;
@@ -242,36 +242,36 @@ class GmailURLScanner {
     });
   }
 
-  // Wait for Gmail interface
-  waitForGmail() {
+  // Wait for U-ReaL interface
+  waitForUReaL() {
     return new Promise((resolve, reject) => {
       let attempts = 0;
       const maxAttempts = 20;
       
-      const checkGmail = () => {
+      const checkUReaL = () => {
         if (this.isDestroyed) {
-          reject(new Error('Scanner destroyed while waiting for Gmail'));
+          reject(new Error('Scanner destroyed while waiting for U-ReaL'));
           return;
         }
 
         attempts++;
         
-        const gmailMain = document.querySelector('[role="main"]') || 
+        const urealMain = document.querySelector('[role="main"]') || 
                          document.querySelector('.nH') || 
                          document.querySelector('[jsname]');
         
-        if (gmailMain) {
-          console.log('✅ Gmail interface detected');
+        if (urealMain) {
+          console.log('✅ U-ReaL interface detected');
           resolve();
         } else if (attempts >= maxAttempts) {
-          reject(new Error('Gmail interface not found after maximum attempts'));
+          reject(new Error('U-ReaL interface not found after maximum attempts'));
         } else {
-          console.log(`⏳ Waiting for Gmail to load... (${attempts}/${maxAttempts})`);
-          setTimeout(checkGmail, 1000);
+          console.log(`⏳ Waiting for U-ReaL to load... (${attempts}/${maxAttempts})`);
+          setTimeout(checkUReaL, 1000);
         }
       };
       
-      checkGmail();
+      checkUReaL();
     });
   }
 
@@ -515,6 +515,7 @@ class GmailURLScanner {
         this.handleMaliciousURL(linkElement, href, result);
       } else {
         this.removeScanningIndicator(linkElement);
+        linkElement.classList.add('benign-link');
       }
     } catch (error) {
       if (!this.isDestroyed) {
@@ -543,7 +544,7 @@ class GmailURLScanner {
     if (!linkElement.querySelector('.malicious-warning')) {
       const warningIcon = document.createElement('span');
       warningIcon.className = 'malicious-warning';
-      warningIcon.innerHTML = ' ⚠️';
+      warningIcon.innerHTML = ' ✖';
       warningIcon.style.color = '#dc2626';
       warningIcon.title = `Malicious link blocked (${(result.confidence * 100).toFixed(1)}% confidence)`;
       linkElement.appendChild(warningIcon);
@@ -603,7 +604,7 @@ class GmailURLScanner {
     modal.className = 'url-scanner-modal';
     modal.innerHTML = `
       <div class="modal-content">
-        <h3>⚠️ Security Warning</h3>
+        <h3>✖ Security Warning</h3>
         <p><strong>Malicious URL blocked:</strong></p>
         <p class="url-text">${url}</p>
         <p><strong>Confidence:</strong> ${(result.confidence * 100).toFixed(1)}%</p>
@@ -677,7 +678,7 @@ class GmailURLScanner {
 let globalScanner = null;
 
 function initializeScanner() {
-  // Only initialize if we're on Gmail
+  // Only initialize if we're on U-ReaL
   if (window.location.hostname !== 'mail.google.com') {
     return;
   }
@@ -689,9 +690,9 @@ function initializeScanner() {
   }
   
   // Create new scanner
-  globalScanner = new GmailURLScanner();
-  window.gmailScanner = globalScanner; // For debugging
-  console.log('🔧 Gmail URL Scanner initialized with lifecycle management');
+  globalScanner = new UReaLURLScanner();
+  window.UReaLURLScanner = globalScanner; // For debugging
+  console.log('🔧 U-ReaL URL Scanner initialized with lifecycle management');
 }
 
 // Initialize scanner

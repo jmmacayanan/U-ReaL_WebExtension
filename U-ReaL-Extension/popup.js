@@ -19,7 +19,7 @@ function displayMaliciousURLs(urls) {
     content.innerHTML = `
       <div class="empty-state">
         <div class="empty-icon">✅</div>
-        <div>No malicious URLs detected</div>
+        <div>No malicious URLs detected.</div>
         <div style="font-size: 12px; margin-top: 5px; opacity: 0.7;">Your emails are safe!</div>
       </div>
     `;
@@ -54,7 +54,7 @@ function updateStatsDisplay(urls) {
   
   // For total scanned, we'll estimate based on malicious findings
   // In a real implementation, you'd track this separately
-  const estimatedTotal = Math.max(urls.length * 10, 0);
+  const estimatedTotal = Math.max(urls.length, 0);
   document.getElementById('totalScanned').textContent = estimatedTotal;
 }
 

@@ -33,7 +33,6 @@ function displayMaliciousURLs(urls) {
         <span>⚠️ ${(item.confidence * 100).toFixed(1)}% confidence</span>
         <span>${formatTime(item.timestamp)}</span>
       </div>
-      <!-- Removed Visit Anyway button -->
     </div>
   `).join('');
 }
@@ -56,12 +55,6 @@ function updateStatsDisplay(urls) {
   // In a real implementation, you'd track this separately
   const estimatedTotal = Math.max(urls.length, 0);
   document.getElementById('totalScanned').textContent = estimatedTotal;
-}
-
-function visitURL(url) {
-  if (confirm(`Are you sure you want to visit this potentially malicious URL?\n\n${url}\n\nThis could be dangerous!`)) {
-    chrome.tabs.create({ url: url });
-  }
 }
 
 function truncateURL(url, maxLength = 50) {

@@ -2,6 +2,7 @@ import re
 import csv
 from urllib.parse import urlparse, urlunparse
 import tldextract
+import requests
 
 class URLFeatureExtractor:
     WHITELIST = set()
@@ -58,7 +59,7 @@ class URLFeatureExtractor:
 
 
     def __init__(self, url):
-        self.url = self.normalize_url(url)       # keep full URL, normalized
+        self.url = self.normalize_url(url)    # keep full URL, normalized
         self.parsed = urlparse(self.url)         # parse full URL
         self.domain = self.get_domain(self.url)  # extract domain only
         self.path = self.parsed.path

@@ -4,6 +4,7 @@ import pandas as pd
 import xgboost as xgb
 from feature_extractor import URLFeatureExtractor
 import logging
+import requests
 
 # -----------------------------
 # Setup logging
@@ -57,10 +58,18 @@ FEATURE_ORDER = [
     'hyphen_count_url',
 ]
 
+def unshorten_url(url):
+    try:
+        response = requests.head(url, allow_redirects=True, timeout=10)
+        return response.url
+    except requests.RequestException as e:
+        return url
+
 # -----------------------------
 # Prediction function
 # -----------------------------
 def predict_url(url, threshold=0.5):
+    url = unshorten_url(url)
     try:
         extractor = URLFeatureExtractor(url)
 
@@ -184,7 +193,7 @@ def whitelist_check():
     if not data or 'url' not in data:
         return jsonify({'error': 'Missing URL in request'}), 400
 
-    url = data['url']
+    url = unshorten_url(data['url'])
     extractor = URLFeatureExtractor(url)
     return jsonify({
         'url': url,
@@ -197,4 +206,4 @@ if __name__ == '__main__':
     print(f"   Model Loaded: {'✅' if model else '❌'}")
     print(f"   Whitelist Size: {len(URLFeatureExtractor.WHITELIST)} domains")
     print(f"   Features: {len(FEATURE_ORDER)} ({', '.join(FEATURE_ORDER)})")
-    app.run(host='127.0.0.1', port=5000, debug=False)
+    app.run(host='127.0.0.1', port=5000, debug=True)

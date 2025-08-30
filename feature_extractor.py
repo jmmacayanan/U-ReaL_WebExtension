@@ -2,7 +2,6 @@ import re
 import csv
 from urllib.parse import urlparse, urlunparse
 import tldextract
-import requests
 
 class URLFeatureExtractor:
     WHITELIST = set()

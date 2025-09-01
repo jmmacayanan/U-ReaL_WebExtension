@@ -1,7 +1,7 @@
-// Background Service Worker for Gmail URL Scanner
+// Background Service Worker for U-ReaL Scanner
 
 // Backend API configuration
-const BACKEND_URL = 'http://localhost:5000'; // Adjust to your Python server
+const BACKEND_URL = 'https://u-real.site'; // Update if backend is hosted elsewhere
 
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   if (request.action === 'checkURL') {
@@ -45,7 +45,7 @@ async function checkURLWithBackend(url) {
 
 // Handle extension installation
 chrome.runtime.onInstalled.addListener(() => {
-  console.log('Gmail URL Scanner installed');
+  console.log('U-ReaL Scanner installed');
   
   // Initialize storage
   chrome.storage.local.set({
@@ -56,3 +56,4 @@ chrome.runtime.onInstalled.addListener(() => {
     }
   });
 });
+

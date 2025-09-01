@@ -7,15 +7,17 @@
       width: 350px;
       min-height: 400px;
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-      margin: 0;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      background: #333376;
       color: white;
+      border: 1px solid rgb(29, 4, 53);
+      overflow: hidden;
+      border-radius: 0.5rem;
     }
     
     .header {
       text-align: center;
-      padding: 20px;
-      background: rgba(0,0,0,0.1);
+      padding: 10px;
+      background: rgba(0,0,0,0.4);
     }
     
     .header h1 {
@@ -76,21 +78,6 @@
       opacity: 0.8;
     }
     
-    .visit-btn {
-      background: #dc2626;
-      color: white;
-      border: none;
-      padding: 4px 8px;
-      border-radius: 4px;
-      font-size: 11px;
-      cursor: pointer;
-      margin-top: 5px;
-    }
-    
-    .visit-btn:hover {
-      background: #b91c1c;
-    }
-    
     .empty-state {
       text-align: center;
       padding: 40px 20px;
@@ -102,43 +89,6 @@
       margin-bottom: 10px;
     }
     
-    .settings-btn {
-      position: absolute;
-      top: 10px;
-      right: 10px;
-      background: rgba(255,255,255,0.2);
-      border: none;
-      color: white;
-      padding: 5px 8px;
-      border-radius: 4px;
-      cursor: pointer;
-      font-size: 12px;
-    }
-    
-    .settings-panel {
-      display: none;
-      background: rgba(0,0,0,0.1);
-      padding: 15px;
-      margin: 10px;
-      border-radius: 8px;
-    }
-    
-    .setting-item {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin: 10px 0;
-      font-size: 13px;
-    }
-    
-    .setting-item input[type="range"] {
-      width: 100px;
-    }
-    
-    .setting-item input[type="checkbox"] {
-      transform: scale(1.2);
-    }
-
     /* Scrollbar styling */
     .content::-webkit-scrollbar {
       width: 6px;
@@ -160,32 +110,15 @@
   </style>
 </head>
 <body>
-  <button class="settings-btn" id="settingsBtn">⚙️</button>
-  
   <div class="header">
-    <h1>🛡️ Gmail URL Scanner</h1>
+    <h1>U-ReaL</h1>
+    <div class="stat-label">Please remain vigilant when opening links!</div>
   </div>
   
   <div class="stats">
     <div class="stat">
-      <span class="stat-number" id="totalScanned">0</span>
-      <span class="stat-label">Scanned</span>
-    </div>
-    <div class="stat">
       <span class="stat-number" id="maliciousFound">0</span>
       <span class="stat-label">Blocked</span>
-    </div>
-  </div>
-
-  <div class="settings-panel" id="settingsPanel">
-    <div class="setting-item">
-      <label>Detection Threshold:</label>
-      <input type="range" id="threshold" min="0.1" max="0.9" step="0.1" value="0.4">
-      <span id="thresholdValue">40%</span>
-    </div>
-    <div class="setting-item">
-      <label>Enable Notifications:</label>
-      <input type="checkbox" id="notifications" checked>
     </div>
   </div>
   

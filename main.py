@@ -1,17 +1,26 @@
 import pandas as pd
 import xgboost as xgb
 from feature_extractor import URLFeatureExtractor
+import requests
 
 # -----------------------------
 # Load Trained Model
 # -----------------------------
 model = xgb.XGBClassifier()
-model.load_model("url_xgb_model.json")
+model.load_model("url_xgb_model_v2.json")
 
 # -----------------------------
 # Load Whitelist
 # -----------------------------
 URLFeatureExtractor.load_whitelist("raw_datasets/benign-urls.csv")
+
+def unshorten_url(url):
+    try:
+        response = requests.head(url, allow_redirects=True, timeout=10)
+        return response.url
+    except requests.RequestException as e:
+        return url
+
 
 # -----------------------------
 # Test URLs
@@ -38,21 +47,47 @@ test_urls = [
     "https://dappssolver.pages.dev/app/",
     "http://allegro.pl-oferta20382047420.icu",
     "https://www.youtube.com/watch?v=yu9lEPDVn1A",
-    "https://www.youtube.com/"
+    "https://www.youtube.com/",
+    "https://film.kace.dev",
+    "https://dibati.com",
+    "https://ln.run/JrHuK",
+    "http://192.227.138.203/",
+    "https://fixnewupdate.com/down/app/index.php?view=index&amp;id=51caa06880986ef8a58eb492b891de47",
+    "https://hau.edu.ph/services/angelite-hub",
+    "https://ukrfunds.com.ua/",
+    "dibati.com",
+    "http://bit.ly/3HOsAU8",
+    "http://bit.ly/4oZggRq",
+    "https://bit.ly/45IPOEo"
+
 ]
 
 # -----------------------------
 # Feature order must match training
 # -----------------------------
 FEATURE_ORDER = [
-    'url_len', 'dot_count', 'hyphen_count', 'has_ip',
-    'suspicious_total',
-    'subdomain_count', 'tld_length',
-    'url_entropy', 'has_a', 'has_mx', 'has_ns', 'ip_count'
+    'URL_length',
+    'Domain_length',
+    'No_of_dots',
+    # 'avg_token_length',
+    'token_count',
+    'largest_token',
+    # 'avg_domain_token_length',
+    'domain_token_count',
+    'largest_domain',
+    # 'avg_path_token',
+    'path_token_count',
+    'largest_path',
+    'sec_sen_word_cnt',
+    'IPaddress_presence',
+    'exe_in_url',
+    'hyphen_count_url'
 ]
+
 
 print("\n🔎 Predictions:")
 for url in test_urls:
+    url = unshorten_url(url)
     extractor = URLFeatureExtractor(url)
 
     # ✅ If whitelisted, skip prediction and label as benign
@@ -71,5 +106,5 @@ for url in test_urls:
         continue
 
     proba = model.predict_proba(df)[0][1]
-    label = "🔴 Malicious" if proba >= 0.4 else "🟢 Benign"
+    label = "🔴 Malicious" if proba >= 0.5 else "🟢 Benign"
     print(f"{url} → {label} ({proba * 100:.2f}% confidence)")

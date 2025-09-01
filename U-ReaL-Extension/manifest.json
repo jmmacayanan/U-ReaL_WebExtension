@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
-  "name": "Gmail URL Security Scanner",
-  "version": "1.0",
+  "name": "U-ReaL",
+  "version": "1.1",
   "description": "Scans URLs in Gmail for potential security threats",
   "permissions": [
     "activeTab",
@@ -23,12 +23,17 @@
   ],
   "action": {
     "default_popup": "popup.html",
-    "default_title": "Gmail URL Scanner"
+    "default_title": "U-ReaL Scanner"
   },
   "web_accessible_resources": [
     {
       "resources": ["warning-icon.svg"],
       "matches": ["https://mail.google.com/*"]
     }
-  ]
+  ],
+  "icons": {
+    "16": "icon-16.png",
+    "48": "icon-48.png",
+    "128": "icon-128.png"
+  }
 }

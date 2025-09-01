@@ -30,7 +30,7 @@ def test_single_url():
     for url in test_urls:
         try:
             response = requests.post(f'{BACKEND_URL}/check-url', 
-                                   json={'url': url, 'threshold': 0.4})
+                                   json={'url': url, 'threshold': 0.5})
             
             if response.status_code == 200:
                 result = response.json()
@@ -52,12 +52,18 @@ def test_multiple_urls():
         "https://www.google.com",
         "http://secure-login-update.com", 
         "https://github.com",
-        "http://suspicious-bank-site.ru"
+        "http://suspicious-bank-site.ru",
+        "https://dataoverhaulers.com/phishing-link-clicked/",
+        "https://zbadac.cfd/pl",
+        "https://cecauf.com.ar/ul/",
+        "https://www.facebook.com/jerneybryant.macayanan",
+        "https://film.kace.dev",
+        "https://strato-faktur.uccvt.org/DRP140269580/"
     ]
     
     try:
         response = requests.post(f'{BACKEND_URL}/check-urls',
-                               json={'urls': urls, 'threshold': 0.4})
+                               json={'urls': urls, 'threshold': 0.5})
         
         if response.status_code == 200:
             data = response.json()
@@ -74,22 +80,6 @@ def test_multiple_urls():
     except Exception as e:
         print(f"❌ Batch check error: {e}")
 
-def test_stats():
-    """Test stats endpoint"""
-    print("\n🔍 Testing stats endpoint...")
-    try:
-        response = requests.get(f'{BACKEND_URL}/stats')
-        if response.status_code == 200:
-            stats = response.json()
-            print("✅ Server stats:")
-            print(f"   Model loaded: {stats['model_loaded']}")
-            print(f"   Whitelist domains: {stats['whitelist_domains']}")
-            print(f"   Feature count: {stats['feature_count']}")
-            print(f"   DNS cache size: {stats['dns_cache_size']}")
-        else:
-            print(f"❌ Stats failed: {response.status_code}")
-    except Exception as e:
-        print(f"❌ Stats error: {e}")
 
 if __name__ == '__main__':
     print("🧪 Gmail URL Scanner Backend Test Suite")
@@ -98,7 +88,6 @@ if __name__ == '__main__':
     test_health()
     test_single_url() 
     test_multiple_urls()
-    test_stats()
     
     print("\n✅ Test suite completed!")
     print("\nTo test manually with curl:")

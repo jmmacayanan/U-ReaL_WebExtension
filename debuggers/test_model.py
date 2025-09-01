@@ -30,7 +30,7 @@ except Exception as e:
 # Test model loading with your file
 try:
     model = xgb.XGBClassifier()
-    model.load_model("url_xgb_model.json")
+    model.load_model("../url_xgb_model_v2.json")
     print("✅ Model loaded successfully!")
 except FileNotFoundError:
     print("❌ Model file 'url_xgb_model.json' not found")

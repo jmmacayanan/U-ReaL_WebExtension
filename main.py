@@ -26,9 +26,11 @@ def unshorten_url(url):
 # Test URLs
 # -----------------------------
 test_urls = [
-    "http://secure-login-update.com",
+    "https://example.com/paypal.com/login",
+    "https://hoc-lip.surge.sh/hr_aruba.html",
+    "https://secure-login-update.com",
     "https://www.google.com",
-    "http://free-money-now.ru",
+    "https://free-money-now.ru",
     "https://bankofamerica.com",
     "https://www.prydwen.gg/",
     "https://shopee.ph/",
@@ -45,10 +47,10 @@ test_urls = [
     "https://bit.ly/3xyzAbC",
     "https://tinyurl.com/abcd123",
     "https://dappssolver.pages.dev/app/",
-    "http://allegro.pl-oferta20382047420.icu",
+    "https://allegro.pl-oferta20382047420.icu",
     "https://www.youtube.com/watch?v=yu9lEPDVn1A",
     "https://www.youtube.com/",
-    "https://film.kace.dev",
+    "https://kace.dev",
     "https://dibati.com",
     "https://ln.run/JrHuK",
     "http://192.227.138.203/",
@@ -69,13 +71,10 @@ FEATURE_ORDER = [
     'URL_length',
     'Domain_length',
     'No_of_dots',
-    # 'avg_token_length',
     'token_count',
     'largest_token',
-    # 'avg_domain_token_length',
     'domain_token_count',
     'largest_domain',
-    # 'avg_path_token',
     'path_token_count',
     'largest_path',
     'sec_sen_word_cnt',
@@ -85,26 +84,26 @@ FEATURE_ORDER = [
 ]
 
 
-print("\n🔎 Predictions:")
+print("\nPredictions:")
 for url in test_urls:
     url = unshorten_url(url)
     extractor = URLFeatureExtractor(url)
 
-    # ✅ If whitelisted, skip prediction and label as benign
+    #If whitelisted, skip prediction and label as benign
     if extractor.is_whitelisted():
-        print(f"{url} → 🟢 Benign (whitelisted)")
+        print(f"{url} -> Benign (whitelisted)")
         continue
 
     feat_dict = extractor.extract_features()
     if feat_dict is None:
-        print(f"{url} → ❌ Feature extraction failed")
+        print(f"{url} ->  Feature extraction failed")
         continue
 
     df = pd.DataFrame([[feat_dict[f] for f in FEATURE_ORDER]], columns=FEATURE_ORDER)
     if df.isnull().any().any():
-        print(f"{url} → ❌ Found NaNs in features")
+        print(f"{url} ->  Found NaNs in features")
         continue
 
     proba = model.predict_proba(df)[0][1]
-    label = "🔴 Malicious" if proba >= 0.5 else "🟢 Benign"
-    print(f"{url} → {label} ({proba * 100:.2f}% confidence)")
+    label = "Malicious" if proba >= 0.5 else "Benign"
+    print(f"{url} -> {label} ({proba * 100:.2f}% confidence)")

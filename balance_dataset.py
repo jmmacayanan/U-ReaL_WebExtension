@@ -20,4 +20,4 @@ df_combined = df_combined.sample(frac=1, random_state=42).reset_index(drop=True)
 
 # Save it
 df_combined.to_csv("url_dataset_balanced.csv", index=False)
-print("✅ Combined and saved:", len(df_combined), "entries")
+print("Combined and saved:", len(df_combined), "entries")

@@ -1,7 +1,5 @@
-// Background Service Worker for U-ReaL Scanner
-
 // Backend API configuration
-const BACKEND_URL = 'https://u-real.site'; // Update if backend is hosted elsewhere
+const BACKEND_URL = 'http://localhost:5000';
 
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   if (request.action === 'checkURL') {

@@ -58,7 +58,7 @@ class URLFeatureExtractor:
 
 
     def __init__(self, url):
-        self.url = self.normalize_url(url)    # keep full URL, normalized
+        self.url = self.normalize_url(url)       # keep full URL, normalized
         self.parsed = urlparse(self.url)         # parse full URL
         self.domain = self.get_domain(self.url)  # extract domain only
         self.path = self.parsed.path
@@ -74,10 +74,9 @@ class URLFeatureExtractor:
         tokens = [t for t in tokens if t]
         if not tokens:
             return 0, 0, 0
-        avg_len = sum(len(t) for t in tokens) / len(tokens)
         largest = max(len(t) for t in tokens)
         count = len(tokens)
-        return avg_len, count, largest
+        return count, largest
 
     # ===== Individual Feature Methods =====
     def URL_length(self):
@@ -93,32 +92,24 @@ class URLFeatureExtractor:
         return self.url.count('-')
 
     # Token features
-    def avg_token_length(self):
-        return self.token_stats(self.tokens_url)[0]
 
     def token_count(self):
-        return self.token_stats(self.tokens_url)[1]
+        return self.token_stats(self.tokens_url)[0]
 
     def largest_token(self):
-        return self.token_stats(self.tokens_url)[2]
-
-    def avg_domain_token_length(self):
-        return self.token_stats(self.tokens_domain)[0]
+        return self.token_stats(self.tokens_url)[1]
 
     def domain_token_count(self):
-        return self.token_stats(self.tokens_domain)[1]
+        return self.token_stats(self.tokens_domain)[0]
 
     def largest_domain(self):
-        return self.token_stats(self.tokens_domain)[2]
-
-    def avg_path_token(self):
-        return self.token_stats(self.tokens_path)[0]
+        return self.token_stats(self.tokens_domain)[1]
 
     def path_token_count(self):
-        return self.token_stats(self.tokens_path)[1]
+        return self.token_stats(self.tokens_path)[0]
 
     def largest_path(self):
-        return self.token_stats(self.tokens_path)[2]
+        return self.token_stats(self.tokens_path)[1]
 
     # Security features
     def sec_sen_word_cnt(self):
@@ -136,13 +127,10 @@ class URLFeatureExtractor:
             'URL_length': self.URL_length(),
             'Domain_length': self.Domain_length(),
             'No_of_dots': self.No_of_dots(),
-            # 'avg_token_length': self.avg_token_length(),
             'token_count': self.token_count(),
             'largest_token': self.largest_token(),
-            # 'avg_domain_token_length': self.avg_domain_token_length(),
             'domain_token_count': self.domain_token_count(),
             'largest_domain': self.largest_domain(),
-            # 'avg_path_token': self.avg_path_token(),
             'path_token_count': self.path_token_count(),
             'largest_path': self.largest_path(),
             'sec_sen_word_cnt': self.sec_sen_word_cnt(),

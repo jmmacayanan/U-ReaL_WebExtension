@@ -1,5 +1,3 @@
-/*U-ReaL Scanner - Content Script Styles */
-
 .url-scanner-modal {
   position: fixed;
   top: 0;
@@ -82,24 +80,6 @@
   background: #2563eb;
 }
 
-/* Malicious link styling */
-.malicious-link {
-  position: relative;
-  text-decoration: line-through !important;
-  color: #dc2626 !important;
-  background-color: #fef2f2 !important;
-  padding: 2px 4px !important;
-  border-radius: 4px !important;
-  border: 1px solid #fca5a5 !important;
-  pointer-events: none !important;
-  cursor: help !important;
-}
-
-.malicious-link::after {
-  content: " ✖";
-  color: #dc2626;
-}
-
 .benign-link {
   position: relative;
   cursor: pointer;
@@ -147,7 +127,6 @@
   50% { opacity: 1; }
 }
 
-/* U-ReaL-specific overrides */
 .ureal-url-scanner-disabled {
   pointer-events: none !important;
   cursor: help !important;
@@ -158,22 +137,6 @@
   margin-left: 4px;
   color: #dc2626;
   font-size: 16px;
-}
-
-/* Notification toast */
-.url-scanner-toast {
-  position: fixed;
-  top: 20px;
-  right: 20px;
-  background: #dc2626;
-  color: white;
-  padding: 15px 20px;
-  border-radius: 8px;
-  z-index: 9999;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  max-width: 350px;
-  animation: slideIn 0.3s ease-out;
 }
 
 .url-scanner-toast.success {

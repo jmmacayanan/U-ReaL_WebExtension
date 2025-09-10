@@ -26,15 +26,25 @@ function displayMaliciousURLs(urls) {
     return;
   }
 
-  content.innerHTML = urls.map(item => `
+  content.innerHTML = urls.map((item, idx) => `
     <div class="malicious-url">
       <div class="url-text">${truncateURL(item.url)}</div>
       <div class="url-meta">
-        <span>⚠️ ${(item.confidence * 100).toFixed(1)}% confidence</span>
         <span>${formatTime(item.timestamp)}</span>
+        <button class="open-anyway-btn" data-url="${encodeURIComponent(item.url)}" style="margin-left:10px;">Open Anyway</button>
       </div>
     </div>
   `).join('');
+
+
+  document.querySelectorAll('.open-anyway-btn').forEach(btn => {
+    btn.addEventListener('click', function(e) {
+      const url = decodeURIComponent(this.getAttribute('data-url'));
+      if (confirm('This link was flagged as malicious. Are you sure you want to open it anyway?')) {
+        chrome.tabs.create({ url });
+      }
+    });
+  });
 }
 
 function updateStats(urls = null) {
@@ -51,8 +61,6 @@ function updateStats(urls = null) {
 function updateStatsDisplay(urls) {
   document.getElementById('maliciousFound').textContent = urls.length;
   
-  // For total scanned, we'll estimate based on malicious findings
-  // In a real implementation, you'd track this separately
   const estimatedTotal = Math.max(urls.length, 0);
   document.getElementById('totalScanned').textContent = estimatedTotal;
 }
@@ -77,3 +85,4 @@ function formatTime(timestamp) {
 
 // Refresh data every 30 seconds
 setInterval(loadMaliciousURLs, 30000);
+

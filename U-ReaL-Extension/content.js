@@ -20,11 +20,11 @@ class UReaLURLScanner {
 
   async init() {
     if (this.isInitialized) {
-      console.log('🔧 Scanner already initialized, skipping...');
+      console.log('Scanner already initialized, skipping...');
       return;
     }
 
-    console.log('🔧 U-ReaL Scanner initializing...');
+    console.log('U-ReaL Scanner initializing...');
     this.isDestroyed = false;
     
     // Setup lifecycle event handlers
@@ -38,12 +38,12 @@ class UReaLURLScanner {
       await this.waitForUReaL();
       
       if (!this.isDestroyed) {
-        console.log('📧 U-ReaL loaded, starting URL scanner');
+        console.log('U-ReaL loaded, starting URL scanner');
         this.startScanning();
         this.isInitialized = true;
       }
     } catch (error) {
-      console.error('❌ Error initializing scanner:', error);
+      console.error('Error initializing scanner:', error);
       this.cleanup();
     }
   }
@@ -58,7 +58,7 @@ class UReaLURLScanner {
     window.addEventListener('beforeunload', this.handleBeforeUnload);
     
     window.addEventListener('popstate', () => {
-      console.log('📍 Browser navigation detected');
+      console.log('Browser navigation detected');
       this.reinitialize();
     });
     
@@ -67,29 +67,29 @@ class UReaLURLScanner {
     
     history.pushState = (...args) => {
       originalPushState.apply(history, args);
-      console.log('📍 U-ReaL pushState navigation detected');
+      console.log('U-ReaL pushState navigation detected');
       this.handleNavigation();
     };
     
     history.replaceState = (...args) => {
       originalReplaceState.apply(history, args);
-      console.log('📍 U-ReaL replaceState navigation detected');
+      console.log('U-ReaL replaceState navigation detected');
       this.handleNavigation();
     };
   }
 
   handleVisibilityChange() {
     if (document.hidden) {
-      console.log('👁️ Tab hidden, pausing scanner');
+      console.log('Tab hidden, pausing scanner');
       this.pauseScanning();
     } else {
-      console.log('👁️ Tab visible, resuming scanner');
+      console.log('Tab visible, resuming scanner');
       this.resumeScanning();
     }
   }
 
   handleFocus() {
-    console.log('🎯 Window focused, ensuring scanner is active');
+    console.log('Window focused, ensuring scanner is active');
     if (!this.isInitialized || this.isDestroyed) {
       this.reinitialize();
     } else {
@@ -98,18 +98,18 @@ class UReaLURLScanner {
   }
 
   handleBlur() {
-    console.log('🎯 Window blurred');
+    console.log('Window blurred');
   }
 
   handleBeforeUnload() {
-    console.log('📤 Page unloading, cleaning up scanner');
+    console.log('Page unloading, cleaning up scanner');
     this.cleanup();
   }
 
   handleNavigation() {
     setTimeout(() => {
       if (this.shouldReinitialize()) {
-        console.log('🔄 U-ReaL navigation completed, reinitializing...');
+        console.log('U-ReaL navigation completed, reinitializing...');
         this.reinitialize();
       }
     }, 1000);
@@ -129,7 +129,7 @@ class UReaLURLScanner {
 
   // Reinitialize the scanner
   async reinitialize() {
-    console.log('🔄 Reinitializing scanner...');
+    console.log('Reinitializing scanner...');
     this.cleanup(false);
     
     // Reset state
@@ -142,12 +142,12 @@ class UReaLURLScanner {
       await this.waitForUReaL();
       
       if (!this.isDestroyed && this.shouldReinitialize()) {
-        console.log('📧 U-ReaL reloaded, restarting scanner');
+        console.log('U-ReaL reloaded, restarting scanner');
         this.startScanning();
         this.isInitialized = true;
       }
     } catch (error) {
-      console.error('❌ Error reinitializing scanner:', error);
+      console.error('Error reinitializing scanner:', error);
     }
   }
 
@@ -199,12 +199,12 @@ class UReaLURLScanner {
             });
             this.scannedUrls.add(item.url);
           });
-          console.log(`📚 Loaded ${this.maliciousUrls.size} known malicious URLs from storage`);
+          console.log(`Loaded ${this.maliciousUrls.size} known malicious URLs from storage`);
         }
 
         if (data.scannedUrls) {
           data.scannedUrls.forEach(url => this.scannedUrls.add(url));
-          console.log(`📚 Loaded ${data.scannedUrls?.length || 0} previously scanned URLs`);
+          console.log(`Loaded ${data.scannedUrls?.length || 0} previously scanned URLs`);
         }
 
         if (data.settings) {
@@ -234,12 +234,12 @@ class UReaLURLScanner {
                          document.querySelector('[jsname]');
         
         if (urealMain) {
-          console.log('✅ U-ReaL interface detected');
+          console.log('U-ReaL interface detected');
           resolve();
         } else if (attempts >= maxAttempts) {
           reject(new Error('U-ReaL interface not found after maximum attempts'));
         } else {
-          console.log(`⏳ Waiting for U-ReaL to load... (${attempts}/${maxAttempts})`);
+          console.log(`Waiting for U-ReaL to load... (${attempts}/${maxAttempts})`);
           setTimeout(checkUReaL, 1000);
         }
       };
@@ -262,7 +262,7 @@ class UReaLURLScanner {
 
     const fullScanInterval = setInterval(() => {
       if (!this.isDestroyed && !document.hidden) {
-        console.log('🔄 Performing periodic full rescan...');
+        console.log('Performing periodic full rescan...');
         this.processedElements = new WeakSet(); // Reset processed elements
         this.scanExistingEmails();
       }
@@ -298,7 +298,7 @@ class UReaLURLScanner {
       });
 
       if (shouldScan) {
-        console.log('🔍 New email content detected, scanning...');
+        console.log('New email content detected, scanning...');
         setTimeout(() => {
           if (!this.isDestroyed) {
             this.scanExistingEmails();
@@ -317,27 +317,10 @@ class UReaLURLScanner {
     this.observers.push(observer);
   }
 
-  //GMAIL BODY
-  containsEmailContent(element) {
-    const emailSelectors = [
-      '.a3s', '.ii', '.adn', '.Am', '[role="listitem"]'
-    ];
-
-    for (const selector of emailSelectors) {
-      if (element.matches && element.matches(selector)) {
-        return true;
-      }
-      if (element.querySelector && element.querySelector(selector)) {
-        return true;
-      }
-    }
-    return false;
-  }
-
   scanExistingEmails(silent = false) {
     if (this.isDestroyed) return;
     
-    if (!silent) console.log('🔍 Scanning existing emails...');
+    if (!silent) console.log('Scanning existing emails...');
 
     //GMAIL BODY
     const emailBodySelectors = [
@@ -357,7 +340,7 @@ class UReaLURLScanner {
       
       const emailBodies = document.querySelectorAll(selector);
       if (!silent && emailBodies.length > 0) {
-        console.log(`📧 Found ${emailBodies.length} elements for selector: ${selector}`);
+        console.log(`Found ${emailBodies.length} elements for selector: ${selector}`);
       }
       
       emailBodies.forEach(body => {
@@ -373,7 +356,7 @@ class UReaLURLScanner {
     });
 
     if (!silent && !this.isDestroyed) {
-      console.log(`📊 Scanned ${totalFound} email bodies, found ${totalScanned} URLs`);
+      console.log(`Scanned ${totalFound} email bodies, found ${totalScanned} URLs`);
     }
   }
 
@@ -410,8 +393,9 @@ class UReaLURLScanner {
   scanEmailContent(container, silent = false) {
     if (!container || this.isDestroyed) return 0;
 
+    //checks for <a> tags with href attributes
     const links = container.querySelectorAll('a[href]');
-    if (!silent) console.log(`🔗 Found ${links.length} links in email content`);
+    if (!silent) console.log(`Found ${links.length} links in email content`);
     
     let processedCount = 0;
     
@@ -466,7 +450,7 @@ class UReaLURLScanner {
       return;
     }
 
-    if (!silent) console.log(`🔍 Processing new URL: ${href}`);
+    if (!silent) console.log(`Processing new URL: ${href}`);
     this.scannedUrls.add(href);
     
     this.addScanningIndicator(linkElement);
@@ -477,7 +461,7 @@ class UReaLURLScanner {
       if (this.isDestroyed) return;
       
       if (result.is_malicious && result.confidence >= this.settings.threshold) {
-        console.log(`🚨 MALICIOUS URL DETECTED: ${href}`);
+        console.log(`MALICIOUS URL DETECTED: ${href}`);
         this.maliciousUrls.set(href, result);
         this.handleMaliciousURL(linkElement, href, result);
       } else {
@@ -486,7 +470,7 @@ class UReaLURLScanner {
       }
     } catch (error) {
       if (!this.isDestroyed) {
-        console.error('❌ Error checking URL:', href, error);
+        console.error('Error checking URL:', href, error);
         this.removeScanningIndicator(linkElement);
       }
     }
@@ -619,7 +603,7 @@ class UReaLURLScanner {
   }
 
   cleanup(removeEventListeners = true) {
-    console.log('🧹 Cleaning up scanner...');
+    console.log('Cleaning up scanner...');
     this.isDestroyed = true;
     
     this.intervals.forEach(interval => clearInterval(interval));
@@ -653,7 +637,7 @@ function initializeScanner() {
   
   globalScanner = new UReaLURLScanner();
   window.UReaLURLScanner = globalScanner; //debugging
-  console.log('🔧 U-ReaL URL Scanner initialized with lifecycle management');
+  console.log('U-ReaL URL Scanner initialized');
 }
 
 if (document.readyState === 'loading') {

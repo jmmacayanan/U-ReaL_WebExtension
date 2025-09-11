@@ -14,7 +14,9 @@ function loadMaliciousURLs() {
 
 function displayMaliciousURLs(urls) {
   const content = document.getElementById('content');
-  
+
+  urls.sort((a, b) => b.timestamp - a.timestamp);
+
   if (urls.length === 0) {
     content.innerHTML = `
       <div class="empty-state">
@@ -35,7 +37,6 @@ function displayMaliciousURLs(urls) {
       </div>
     </div>
   `).join('');
-
 
   document.querySelectorAll('.open-anyway-btn').forEach(btn => {
     btn.addEventListener('click', function(e) {
@@ -85,4 +86,5 @@ function formatTime(timestamp) {
 
 // Refresh data every 30 seconds
 setInterval(loadMaliciousURLs, 30000);
+
 

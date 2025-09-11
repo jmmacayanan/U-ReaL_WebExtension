@@ -505,9 +505,6 @@ class UReaLURLScanner {
       border: 1px solid #fca5a5 !important;
       cursor: help !important;
       user-select: none !important;
-      -webkit-user-select: none !important;
-      -moz-user-select: none !important;
-      -ms-user-select: none !important;
     `;
     
     linkElement.removeAttribute('href');

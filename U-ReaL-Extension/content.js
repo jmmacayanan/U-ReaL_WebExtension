@@ -1,4 +1,4 @@
-// U-ReaL Scanner Content Script - Fixed Lifecycle Management
+//U-ReaL content.js
 class UReaLURLScanner {
   constructor() {
     this.scannedUrls = new Set();
@@ -50,23 +50,18 @@ class UReaLURLScanner {
 
   // Setup event handlers for page lifecycle
   setupLifecycleHandlers() {
-    // Handle tab visibility changes
     document.addEventListener('visibilitychange', this.handleVisibilityChange);
     
-    // Handle window focus/blur
     window.addEventListener('focus', this.handleFocus);
     window.addEventListener('blur', this.handleBlur);
     
-    // Handle page unload
     window.addEventListener('beforeunload', this.handleBeforeUnload);
     
-    // Handle U-ReaL navigation (pushstate/popstate)
     window.addEventListener('popstate', () => {
       console.log('📍 Browser navigation detected');
       this.reinitialize();
     });
     
-    // Monitor for pushstate changes (U-ReaL navigation)
     const originalPushState = history.pushState;
     const originalReplaceState = history.replaceState;
     
@@ -83,7 +78,6 @@ class UReaLURLScanner {
     };
   }
 
-  // Handle visibility changes (tab switching)
   handleVisibilityChange() {
     if (document.hidden) {
       console.log('👁️ Tab hidden, pausing scanner');
@@ -94,7 +88,6 @@ class UReaLURLScanner {
     }
   }
 
-  // Handle window focus
   handleFocus() {
     console.log('🎯 Window focused, ensuring scanner is active');
     if (!this.isInitialized || this.isDestroyed) {
@@ -104,19 +97,15 @@ class UReaLURLScanner {
     }
   }
 
-  // Handle window blur
   handleBlur() {
     console.log('🎯 Window blurred');
-    // Don't pause on blur as U-ReaL might still be processing
   }
 
-  // Handle before page unload
   handleBeforeUnload() {
     console.log('📤 Page unloading, cleaning up scanner');
     this.cleanup();
   }
 
-  // Handle U-ReaL navigation
   handleNavigation() {
     setTimeout(() => {
       if (this.shouldReinitialize()) {
@@ -126,14 +115,11 @@ class UReaLURLScanner {
     }, 1000);
   }
 
-  // Check if we should reinitialize
   shouldReinitialize() {
-    // Check if we're still on U-ReaL
     if (window.location.hostname !== 'mail.google.com') {
       return false;
     }
     
-    // Check if U-ReaL interface is present
     const urealInterface = document.querySelector('[role="main"]') || 
                           document.querySelector('.nH') || 
                           document.querySelector('[jsname]');
@@ -144,9 +130,7 @@ class UReaLURLScanner {
   // Reinitialize the scanner
   async reinitialize() {
     console.log('🔄 Reinitializing scanner...');
-    
-    // Cleanup existing instance
-    this.cleanup(false); // Don't remove event listeners
+    this.cleanup(false);
     
     // Reset state
     this.isInitialized = false;
@@ -167,46 +151,36 @@ class UReaLURLScanner {
     }
   }
 
-  // Start all scanning activities
   startScanning() {
     this.observeEmailChanges();
     this.scanExistingEmails();
     this.setupPeriodicScan();
   }
 
-  // Pause scanning activities
   pauseScanning() {
-    // Clear intervals
     this.intervals.forEach(interval => clearInterval(interval));
     this.intervals = [];
     
-    // Disconnect observers but keep them for resume
     this.observers.forEach(observer => {
       if (observer.disconnect) observer.disconnect();
     });
   }
 
-  // Resume scanning activities
   resumeScanning() {
     if (this.isDestroyed) return;
     
-    // Only resume if we're still on U-ReaL
     if (!this.shouldReinitialize()) {
       this.reinitialize();
       return;
     }
     
-    // Restart observers
     this.observeEmailChanges();
     
-    // Restart periodic scanning
     this.setupPeriodicScan();
-    
-    // Immediate scan
+
     setTimeout(() => this.scanExistingEmails(), 500);
   }
 
-  // Load stored data
   async loadStoredData() {
     return new Promise((resolve) => {
       chrome.storage.local.get(['maliciousUrls', 'scannedUrls', 'settings'], (data) => {
@@ -242,7 +216,6 @@ class UReaLURLScanner {
     });
   }
 
-  // Wait for U-ReaL interface
   waitForUReaL() {
     return new Promise((resolve, reject) => {
       let attempts = 0;
@@ -275,22 +248,18 @@ class UReaLURLScanner {
     });
   }
 
-  // Setup periodic scanning with proper cleanup
   setupPeriodicScan() {
-    // Clear any existing intervals
     this.intervals.forEach(interval => clearInterval(interval));
     this.intervals = [];
     
     if (this.isDestroyed) return;
     
-    // Scan every 5 seconds for new content
     const quickScanInterval = setInterval(() => {
       if (!this.isDestroyed && !document.hidden) {
         this.scanExistingEmails(true);
       }
     }, 5000);
-    
-    // Full rescan every 30 seconds
+
     const fullScanInterval = setInterval(() => {
       if (!this.isDestroyed && !document.hidden) {
         console.log('🔄 Performing periodic full rescan...');
@@ -302,7 +271,6 @@ class UReaLURLScanner {
     this.intervals.push(quickScanInterval, fullScanInterval);
   }
 
-  // Observe email changes with proper cleanup
   observeEmailChanges() {
     // Disconnect existing observers
     this.observers.forEach(observer => {
@@ -349,7 +317,7 @@ class UReaLURLScanner {
     this.observers.push(observer);
   }
 
-  // Check if element contains email content
+  //GMAIL BODY
   containsEmailContent(element) {
     const emailSelectors = [
       '.a3s', '.ii', '.adn', '.Am', '[role="listitem"]'
@@ -366,12 +334,12 @@ class UReaLURLScanner {
     return false;
   }
 
-  // Scan existing emails
   scanExistingEmails(silent = false) {
     if (this.isDestroyed) return;
     
     if (!silent) console.log('🔍 Scanning existing emails...');
-    
+
+    //GMAIL BODY
     const emailBodySelectors = [
       '.a3s.aiL', '.a3s.aXjCH', '.a3s',
       '.ii.gt .a3s', '.ii .a3s', '.gs .a3s',
@@ -409,7 +377,6 @@ class UReaLURLScanner {
     }
   }
 
-  // Rest of the methods remain the same...
   isValidEmailContent(element) {
     if (!element) return false;
 
@@ -580,6 +547,7 @@ class UReaLURLScanner {
     }
   }
 
+  //flask sever communication
   async checkURL(url) {
     return new Promise((resolve) => {
       chrome.runtime.sendMessage({
@@ -653,22 +621,18 @@ class UReaLURLScanner {
     });
   }
 
-  // Cleanup method
   cleanup(removeEventListeners = true) {
     console.log('🧹 Cleaning up scanner...');
     this.isDestroyed = true;
     
-    // Clear intervals
     this.intervals.forEach(interval => clearInterval(interval));
     this.intervals = [];
     
-    // Disconnect observers
     this.observers.forEach(observer => {
       if (observer.disconnect) observer.disconnect();
     });
     this.observers = [];
     
-    // Remove event listeners if requested
     if (removeEventListeners) {
       document.removeEventListener('visibilitychange', this.handleVisibilityChange);
       window.removeEventListener('focus', this.handleFocus);
@@ -678,38 +642,31 @@ class UReaLURLScanner {
   }
 }
 
-// Global scanner management
 let globalScanner = null;
 
 function initializeScanner() {
-  // Only initialize if we're on U-ReaL
   if (window.location.hostname !== 'mail.google.com') {
     return;
   }
   
-  // Cleanup existing scanner if any
   if (globalScanner) {
     globalScanner.cleanup();
     globalScanner = null;
   }
   
-  // Create new scanner
   globalScanner = new UReaLURLScanner();
-  window.UReaLURLScanner = globalScanner; // For debugging
+  window.UReaLURLScanner = globalScanner; //debugging
   console.log('🔧 U-ReaL URL Scanner initialized with lifecycle management');
 }
 
-// Initialize scanner
 if (document.readyState === 'loading') {
   document.addEventListener('DOMContentLoaded', initializeScanner);
 } else {
   initializeScanner();
 }
 
-// Also initialize on window load for safety
 window.addEventListener('load', initializeScanner);
 
-// Handle page refresh/reload
 window.addEventListener('beforeunload', () => {
   if (globalScanner) {
     globalScanner.cleanup();
